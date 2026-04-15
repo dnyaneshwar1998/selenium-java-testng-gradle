@@ -35,7 +35,11 @@ public final class DriverManager {
                 ConfigManager.getInt("implicit.wait.seconds", 5)));
         driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(
                 ConfigManager.getInt("page.load.timeout.seconds", 30)));
-        driver.manage().window().maximize();
+        if (headless) {
+            driver.manage().window().setSize(new org.openqa.selenium.Dimension(1920, 1080));
+        } else {
+            driver.manage().window().maximize();
+        }
         DRIVER.set(driver);
     }
 
@@ -60,6 +64,10 @@ public final class DriverManager {
         ChromeOptions options = new ChromeOptions();
         if (headless) {
             options.addArguments("--headless=new");
+            // Required for stable Chrome startup on Linux CI runners.
+            options.addArguments("--no-sandbox");
+            options.addArguments("--disable-dev-shm-usage");
+            options.addArguments("--window-size=1920,1080");
         }
         return new ChromeDriver(options);
     }
