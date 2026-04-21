@@ -9,6 +9,9 @@ public class SeleniumHomePage extends BasePage {
     @FindBy(css = "h1")
     private WebElement header;
 
+    @FindBy(xpath = "//a/span[text()='Blog']")
+    private WebElement blogLink;
+
     public SeleniumHomePage(WebDriver driver) {
         super(driver);
         PageFactory.initElements(driver, this);
@@ -16,5 +19,10 @@ public class SeleniumHomePage extends BasePage {
 
     public String getHeaderText() {
         return getText(header);
+    }
+
+    public void clickBlogLink() {
+        System.out.println("Clicking blog link");
+        click(blogLink);
     }
 }
