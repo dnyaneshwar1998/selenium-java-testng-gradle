@@ -16,7 +16,7 @@ pipeline {
         stage('Setup Java') {
             steps {
                 script {
-                    env.JAVA_HOME = tool name: 'jdk25', type: 'jdk'
+                    env.JAVA_HOME = sh(script: '/usr/libexec/java_home -v 25', returnStdout: true).trim()
                     env.PATH = "${env.JAVA_HOME}/bin:${env.PATH}"
                 }
                 sh 'echo "JAVA_HOME=$JAVA_HOME"'
