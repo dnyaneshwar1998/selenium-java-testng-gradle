@@ -1,10 +1,6 @@
 pipeline {
     agent any
 
-    tools {
-        jdk 'jdk25'
-    }
-
     options {
         timestamps()
         disableConcurrentBuilds()
@@ -14,6 +10,18 @@ pipeline {
         stage('Checkout') {
             steps {
                 checkout scm
+            }
+        }
+
+        stage('Setup Java') {
+            steps {
+                script {
+                    env.JAVA_HOME = tool name: 'jdk25', type: 'jdk'
+                    env.PATH = "${env.JAVA_HOME}/bin:${env.PATH}"
+                }
+                sh 'echo "JAVA_HOME=$JAVA_HOME"'
+                sh 'java -version'
+                sh './gradlew -version'
             }
         }
 
