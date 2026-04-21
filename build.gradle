@@ -7,7 +7,7 @@ version = '1.0.0'
 
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(17)
+        languageVersion = JavaLanguageVersion.of(25)
     }
 }
 
@@ -21,12 +21,16 @@ dependencies {
     testImplementation 'io.github.bonigarcia:webdrivermanager:5.9.2'
     testImplementation 'org.assertj:assertj-core:3.27.3'
     testImplementation 'org.slf4j:slf4j-simple:2.0.17'
+    testImplementation 'com.aventstack:extentreports:5.1.2'
+    testImplementation 'io.qameta.allure:allure-testng:2.29.1'
 }
 
 tasks.withType(Test).configureEach {
     useTestNG() {
         suites 'src/test/resources/testng.xml'
     }
+
+    systemProperty 'allure.results.directory', "$buildDir/allure-results"
 
     testLogging {
         events 'passed', 'skipped', 'failed'
