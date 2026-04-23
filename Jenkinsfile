@@ -36,7 +36,7 @@ pipeline {
     post {
         always {
             junit testResults: 'build/test-results/test/*.xml', allowEmptyResults: true
-            archiveArtifacts artifacts: 'build/reports/tests/test/**,build/reports/extent/**,build/allure-results/**', allowEmptyArchive: true
+            archiveArtifacts artifacts: 'build/reports/tests/test/**,build/reports/extent/**,build/allure-results/**,build/screenshots/**', allowEmptyArchive: true
 
             publishHTML(target: [
                 reportName: 'Extent Report',
