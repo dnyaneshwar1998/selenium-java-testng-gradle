@@ -5,13 +5,13 @@
        data-provider-thread-count="4"
        preserve-order="false">
     <listeners>
-        <listener class-name="com.example.framework.reports.ExtentReportListener"/>
+        <listener class-name="listeners.TestListener"/>
         <listener class-name="io.qameta.allure.testng.AllureTestNg"/>
     </listeners>
     <test name="Smoke Tests">
         <classes>
-            <class name="com.example.tests.SampleUiTest"/>
-        
+            <class name="tests.LoginTest"/>
+            <class name="tests.DashboardTest"/>
         </classes>
     </test>
 </suite>

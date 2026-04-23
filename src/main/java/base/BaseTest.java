@@ -1,15 +1,15 @@
-package com.example.tests;
+package base;
 
-import com.example.framework.config.ConfigManager;
-import com.example.framework.driver.DriverManager;
+import driver.DriverManager;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
+import utils.ConfigReader;
 
 public abstract class BaseTest {
     @BeforeMethod(alwaysRun = true)
     public void setUp() {
         DriverManager.createDriver();
-        DriverManager.getDriver().get(ConfigManager.get("base.url"));
+        DriverManager.getDriver().get(ConfigReader.get("base.url"));
     }
 
     @AfterMethod(alwaysRun = true)

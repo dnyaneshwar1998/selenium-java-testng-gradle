@@ -1,28 +1,32 @@
-package com.example.framework.reports;
+package listeners;
 
 import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.Status;
 import com.aventstack.extentreports.reporter.ExtentSparkReporter;
-import com.example.framework.driver.DriverManager;
+import constants.FrameworkConstants;
+import driver.DriverManager;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import org.openqa.selenium.OutputType;
-import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.testng.ITestContext;
 import org.testng.ITestListener;
 import org.testng.ITestResult;
+import utils.ScreenshotUtil;
 
-public class ExtentReportListener implements ITestListener {
-    private static final String REPORT_FILE = "build/reports/extent/extent-report.html";
+public class TestListener implements ITestListener {
     private static final ExtentReports EXTENT = createExtentReports();
     private static final ThreadLocal<ExtentTest> TEST_NODE = new ThreadLocal<>();
+    private static final Path SCREENSHOT_DIR = Paths.get("build", "screenshots");
     private static final DateTimeFormatter TIME_FORMAT =
             DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    private static final DateTimeFormatter FILE_TIME_FORMAT =
+            DateTimeFormatter.ofPattern("yyyyMMdd-HHmmss-SSS");
 
     private static ExtentReports createExtentReports() {
-        ExtentSparkReporter sparkReporter = new ExtentSparkReporter(REPORT_FILE);
+        ExtentSparkReporter sparkReporter = new ExtentSparkReporter(FrameworkConstants.EXTENT_REPORT_FILE);
         sparkReporter.config().setDocumentTitle("UI Automation Report");
         sparkReporter.config().setReportName("Test Execution Results");
 
@@ -71,10 +75,17 @@ public class ExtentReportListener implements ITestListener {
     private void attachScreenshot(ExtentTest extentTest) {
         try {
             WebDriver driver = DriverManager.getDriver();
-            String screenshot = ((TakesScreenshot) driver).getScreenshotAs(OutputType.BASE64);
+            String screenshot = ScreenshotUtil.captureBase64(driver);
             extentTest.addScreenCaptureFromBase64String(screenshot, "Failure Screenshot");
+            Path screenshotPath = SCREENSHOT_DIR.resolve(buildScreenshotName());
+            Path savedFile = ScreenshotUtil.captureToFile(driver, screenshotPath);
+            extentTest.info("Saved screenshot file: " + savedFile.toString());
         } catch (Exception exception) {
             extentTest.log(Status.WARNING, "Could not capture screenshot: " + exception.getMessage());
         }
+    }
+
+    private String buildScreenshotName() {
+        return "failure-" + LocalDateTime.now().format(FILE_TIME_FORMAT) + ".png";
     }
 }

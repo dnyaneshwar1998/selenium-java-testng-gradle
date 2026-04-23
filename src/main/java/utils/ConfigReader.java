@@ -1,21 +1,22 @@
-package com.example.framework.config;
+package utils;
 
+import constants.FrameworkConstants;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-public final class ConfigManager {
-    private static final String CONFIG_FILE = "config.properties";
+public final class ConfigReader {
     private static final Properties PROPERTIES = loadProperties();
 
-    private ConfigManager() {
+    private ConfigReader() {
     }
 
     private static Properties loadProperties() {
         Properties properties = new Properties();
-        try (InputStream input = ConfigManager.class.getClassLoader().getResourceAsStream(CONFIG_FILE)) {
+        try (InputStream input = ConfigReader.class.getClassLoader()
+                .getResourceAsStream(FrameworkConstants.CONFIG_FILE)) {
             if (input == null) {
-                throw new IllegalStateException("Unable to find " + CONFIG_FILE + " in classpath.");
+                throw new IllegalStateException("Unable to find " + FrameworkConstants.CONFIG_FILE + " in classpath.");
             }
             properties.load(input);
         } catch (IOException exception) {
