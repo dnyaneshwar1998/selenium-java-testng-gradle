@@ -31,11 +31,23 @@ tasks.withType(Test).configureEach {
     }
 
     systemProperty 'allure.results.directory', "$buildDir/allure-results"
+    ['base.url', 'browser', 'headless', 'implicit.wait.seconds', 'page.load.timeout.seconds'].each { key ->
+        def value = System.getProperty(key)
+        if (value != null) {
+            systemProperty key, value
+        }
+    }
+    doFirst {
+        println "Resolved test runtime config: " +
+                "browser=${systemProperties['browser'] ?: 'chrome (from config.properties)'}, " +
+                "headless=${systemProperties['headless'] ?: 'false (from config.properties)'}, " +
+                "base.url=${systemProperties['base.url'] ?: 'from config.properties'}"
+    }
 
     testLogging {
         events 'passed', 'skipped', 'failed'
         exceptionFormat 'full'
-        showStandardStreams = false
+        showStandardStreams = true
     }
 
     reports {
