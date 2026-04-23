@@ -47,11 +47,14 @@ pipeline {
                 allowMissing: true
             ])
 
-            allure([
-                includeProperties: false,
-                jdk: '',
-                results: [[path: 'build/allure-results']]
-            ])
+            catchError(buildResult: 'SUCCESS', stageResult: 'UNSTABLE') {
+                allure([
+                    includeProperties: false,
+                    jdk: '',
+                    commandline: 'allure-2',
+                    results: [[path: 'build/allure-results']]
+                ])
+            }
         }
     }
 }
